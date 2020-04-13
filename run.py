@@ -59,7 +59,7 @@ app.layout = html.Div([
             ])
 ])
 
-'''
+
 @app.callback(
     dash.dependencies.Output('task-summary', 'children'),
     [dash.dependencies.Input('task-dropdown', 'value')])
@@ -72,4 +72,4 @@ def update_summary(value):
 def update_search_results(value):
     dff = df[df['Kaggle Task name'] == value]
     return generate_table(dff)
-'''    
+
