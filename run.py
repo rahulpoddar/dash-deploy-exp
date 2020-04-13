@@ -37,25 +37,18 @@ def generate_table(dff):
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 
-app.layout = html.Div(children=[
-    html.H1(children='Hello Dash'),
-    html.Div(children='''
-        Dash: A web application framework for Python.
-    '''),
-    dcc.Graph(
-        id='example-graph',    
-        figure={
-            'data': [
-                {'x': [1, 2, 3], 'y': [4, 1, 2], 'type': 'bar', 'name': 'SF'},
-                {'x': [1, 2, 3], 'y': [2, 4, 5], 'type': 'bar', 'name': u'Montréal'},
-            ],
-            'layout': {
-                'title': 'Dash Data Visualization'
-            }
-        }
-    ),
-    dcc.Input(id='my-id', value='initial value', type="text"),
-    html.Div(id='my-div')
+app.layout = html.Div([
+        html.Div([
+        html.H1('COVID-19 Open Research Dataset Challenge (CORD-19)'),
+        ]),
+    
+    html.Div([html.H3('Response Summary', id = 'task-summary-heading'),
+    html.Div(id = 'task-summary')]),
+    
+    html.Div([
+            html.H3('Search Results'),
+            html.Div(id = 'search-results')
+            ])
 ])
 
 '''
