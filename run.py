@@ -40,13 +40,7 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app.layout = html.Div([
         html.Div([
         html.H1('COVID-19 Open Research Dataset Challenge (CORD-19)'),
-        dcc.Dropdown(
-        id='task-dropdown',
-        options=[
-            {'label': i, 'value': i} for i in tasks 
-        ],
-        placeholder="Select a task",
-    )]),
+        ]),
     
     html.Div([html.H3('Response Summary', id = 'task-summary-heading'),
     html.Div(id = 'task-summary')]),
