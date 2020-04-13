@@ -40,7 +40,15 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app.layout = html.Div([
         html.Div([
         html.H1('COVID-19 Open Research Dataset Challenge (CORD-19)'),
-        ]),
+        dcc.Dropdown(
+        id='demo-dropdown',
+        options=[
+            {'label': 'New York City', 'value': 'NYC'},
+            {'label': 'Montreal', 'value': 'MTL'},
+            {'label': 'San Francisco', 'value': 'SF'}
+        ],
+        value='NYC'
+    )]),
     
     html.Div([html.H3('Response Summary', id = 'task-summary-heading'),
     html.Div(id = 'task-summary')]),
