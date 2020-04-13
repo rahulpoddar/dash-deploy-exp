@@ -14,6 +14,8 @@ app.config.supress_callback_exceptions = True
 
 df = pd.read_csv('https://raw.githubusercontent.com/rahulpoddar/dash-deploy-exp/master/TASK1_annotated_1.csv', encoding='latin1')
 
+tasks = df['Kaggle Task name'].unique().tolist()
+
 def generate_summary(task):
     return 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
 
@@ -41,13 +43,11 @@ app.layout = html.Div([
         html.Div([
         html.H1('COVID-19 Open Research Dataset Challenge (CORD-19)'),
         dcc.Dropdown(
-        id='demo-dropdown',
+        id='task-dropdown',
         options=[
-            {'label': 'New York City', 'value': 'NYC'},
-            {'label': 'Montreal', 'value': 'MTL'},
-            {'label': 'San Francisco', 'value': 'SF'}
+            {'label': i, 'value': i} for i in tasks 
         ],
-        value='NYC'
+        placeholder="Select a task",
     )]),
     
     html.Div([html.H3('Response Summary', id = 'task-summary-heading'),
