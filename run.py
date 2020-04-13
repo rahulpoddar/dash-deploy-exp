@@ -12,6 +12,8 @@ server.secret_key = os.environ.get('secret_key', 'secret')
 app = dash.Dash(name = __name__, server = server)
 app.config.supress_callback_exceptions = True
 
+df = pd.read_excel('TASK1_annotated_1.xlsx', sheet_name = 'Newone')
+
 app.layout = html.Div(children=[
     html.H1(children='Hello Dash'),
     html.Div(children='''
