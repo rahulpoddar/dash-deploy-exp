@@ -12,8 +12,8 @@ server.secret_key = os.environ.get('secret_key', 'secret')
 app = dash.Dash(name = __name__, server = server)
 app.config.supress_callback_exceptions = True
 
-url = 'https://raw.githubusercontent.com/rahulpoddar/dash-deploy-exp/master/TASK1_annotated_1.csv'
-df = pd.read_csv(url)
+#url = 'https://raw.githubusercontent.com/rahulpoddar/dash-deploy-exp/master/TASK1_annotated_1.csv'
+#df = pd.read_csv(url)
 
 app.layout = html.Div(children=[
     html.H1(children='Hello Dash'),
