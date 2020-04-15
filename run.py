@@ -7,6 +7,7 @@ from dash.dependencies import Input, Output, State
 from flask import Flask
 import os
 import requests
+from text_summ import _output
 
 server = Flask(__name__)
 server.secret_key = os.environ.get('secret_key', 'secret')
@@ -62,7 +63,8 @@ app.layout = html.Div([
             html.Div(id = 'sub-task-questions')
             ], id = 'sub-task-questions-main'),
     html.Div([html.H3('Response Summary'),
-    html.Div(id = 'task-summary')], id = 'task-summary-main'),
+    html.Div(id = 'task-summary'),
+    html.Div(id = 'search-summary')], id = 'task-summary-main'),
     
     html.Div([
             html.H3('Search Results'),
@@ -76,7 +78,8 @@ app.layout = html.Div([
     [dash.dependencies.Input('task-dropdown', 'value')])
 def update_summary(value):
     if value != None:
-        return generate_summary(value)
+        dff = df[df['Kaggle Task name'] == value]
+        return _output(dff['Output'].tolist())[0]    
 
 
 @app.callback(
@@ -110,6 +113,19 @@ def populate_search_results(n_clicks, value):
         pred_df = pd.DataFrame(predictions[0])
         pred_df.columns = ['Distance', 'Document id_', 'Output']
         return generate_table(pred_df)
+    
+@app.callback(
+        Output('search-summary', 'children'),
+         [Input('submit-button-state', 'n_clicks')],
+         [State('general-search', 'value')]
+         )
+def generate_search_summary(n_clicks, value):
+    if value != '':
+        query = value
+        response = requests.post("https://nlp.biano-ai.com/develop/test", json={"texts": [query]})
+        predictions = response.json()['predictions']
+        pred_df = pd.DataFrame(predictions[0])
+        return _output(pred_df['text'].tolist())[0]
 
 if __name__ == '__main__':
     app.run_server(debug=True)
