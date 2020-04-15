@@ -3,7 +3,7 @@ import dash_html_components as html
 import dash_core_components as dcc
 import pandas as pd
 from dash.dependencies import Input, Output, State
-import requests
+#import requests
 
 #url = 'https://raw.githubusercontent.com/rahulpoddar/dash-deploy-exp/master/TASK1_annotated_1.csv'
 df = pd.read_csv('https://raw.githubusercontent.com/rahulpoddar/dash-deploy-exp/master/TASK1_annotated_1.csv', encoding='latin1')
@@ -89,7 +89,7 @@ def sub_task_questions(value):
     dff = df[df['Kaggle Task name'] == value]
     results = dff['Search'].unique().tolist()
     return html.P(results)
-   
+'''   
 @app.callback(
         Output('query-results', 'children'),
          [Input('submit-button-state', 'n_clicks')],
@@ -102,7 +102,7 @@ def populate_search_results(n_clicks, value):
     pred_df = pd.DataFrame(predictions[0])
     pred_df.columns = ['Distance', 'Document id_', 'Output']
     return generate_table(pred_df)
-
+'''
 
 if __name__ == '__main__':
     app.run_server(debug=True)
