@@ -11,7 +11,7 @@ import requests
 server = Flask(__name__)
 server.secret_key = os.environ.get('secret_key', 'secret')
 app = dash.Dash(name = __name__, server = server)
-app.config.supress_callback_exceptions = True
+#app.config.supress_callback_exceptions = True
 
 df = pd.read_csv('https://raw.githubusercontent.com/rahulpoddar/dash-deploy-exp/master/TASK1_annotated_1.csv', encoding='latin1')
 
@@ -82,8 +82,9 @@ def update_summary(value):
     dash.dependencies.Output('search-results', 'children'),
     [dash.dependencies.Input('task-dropdown', 'value')])
 def update_search_results(value):
-    dff = df[df['Kaggle Task name'] == value]
-    return generate_table(dff)
+    if value != None:
+        dff = df[df['Kaggle Task name'] == value]
+        return generate_table(dff)
 
 
 @app.callback(
@@ -100,9 +101,14 @@ def sub_task_questions(value):
          [State('general-search', 'value')]
          )
 def populate_search_results(n_clicks, value):
-    query = value
-    response = requests.post("https://nlp.biano-ai.com/develop/test", json={"texts": [query]})
-    predictions = response.json()['predictions']
-    pred_df = pd.DataFrame(predictions[0])
-    pred_df.columns = ['Distance', 'Document id_', 'Output']
-    return generate_table(pred_df)
+    print(value)
+    if value != '':
+        query = value
+        response = requests.post("https://nlp.biano-ai.com/develop/test", json={"texts": [query]})
+        predictions = response.json()['predictions']
+        pred_df = pd.DataFrame(predictions[0])
+        pred_df.columns = ['Distance', 'Document id_', 'Output']
+        return generate_table(pred_df)
+
+if __name__ == '__main__':
+    app.run_server(debug=True)
