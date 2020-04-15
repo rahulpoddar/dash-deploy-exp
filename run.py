@@ -6,7 +6,7 @@ import dash_table
 from dash.dependencies import Input, Output, State
 from flask import Flask
 import os
-#import requests
+import requests
 
 server = Flask(__name__)
 server.secret_key = os.environ.get('secret_key', 'secret')
