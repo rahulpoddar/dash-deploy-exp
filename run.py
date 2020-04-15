@@ -60,22 +60,23 @@ app.layout = html.Div([
     html.Div([
             html.H3('Sub-Task Questions'),
             html.Div(id = 'sub-task-questions')
-            ]),
-    html.Div([html.H3('Response Summary', id = 'task-summary-heading'),
-    html.Div(id = 'task-summary')]),
+            ], id = 'sub-task-questions-main'),
+    html.Div([html.H3('Response Summary'),
+    html.Div(id = 'task-summary')], id = 'task-summary-main'),
     
     html.Div([
             html.H3('Search Results'),
             html.Div(id = 'search-results'),
             html.Div(id = 'query-results')
-            ])
+            ], id = 'search-results-main')
 ])
 
 @app.callback(
     dash.dependencies.Output('task-summary', 'children'),
     [dash.dependencies.Input('task-dropdown', 'value')])
 def update_summary(value):
-    return generate_summary(value)
+    if value != None:
+        return generate_summary(value)
 
 
 @app.callback(
@@ -91,9 +92,10 @@ def update_search_results(value):
     dash.dependencies.Output('sub-task-questions', 'children'),
     [dash.dependencies.Input('task-dropdown', 'value')])
 def sub_task_questions(value):
-    dff = df[df['Kaggle Task name'] == value]
-    results = dff['Search'].unique().tolist()
-    return html.P(results)
+    if value != None:
+        dff = df[df['Kaggle Task name'] == value]
+        results = dff['Search'].unique().tolist()
+        return html.P(results)
    
 @app.callback(
         Output('query-results', 'children'),
@@ -101,7 +103,6 @@ def sub_task_questions(value):
          [State('general-search', 'value')]
          )
 def populate_search_results(n_clicks, value):
-    print(value)
     if value != '':
         query = value
         response = requests.post("https://nlp.biano-ai.com/develop/test", json={"texts": [query]})
