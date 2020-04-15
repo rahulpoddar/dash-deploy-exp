@@ -4,7 +4,7 @@ import dash_core_components as dcc
 import pandas as pd
 from dash.dependencies import Input, Output, State
 #import requests
-
+'''
 #url = 'https://raw.githubusercontent.com/rahulpoddar/dash-deploy-exp/master/TASK1_annotated_1.csv'
 df = pd.read_csv('https://raw.githubusercontent.com/rahulpoddar/dash-deploy-exp/master/TASK1_annotated_1.csv', encoding='latin1')
 
@@ -35,7 +35,7 @@ def generate_table(dff):
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-'''
+
 app.layout = html.Div([
         html.Div([
         html.H1('COVID-19 Open Research Dataset Challenge (CORD-19)'),
