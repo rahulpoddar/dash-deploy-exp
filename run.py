@@ -20,21 +20,23 @@ def generate_summary(task):
     return 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
 
 def generate_table(dff):
-    rel_cols = ['Document id_', 'Output']
-    return dash_table.DataTable(
-            id = 'search-results-table',
-            columns = [{"name": i, "id": i} for i in dff[rel_cols].columns],
-            data = dff[rel_cols].to_dict('records'),
-            style_data={
-        'whiteSpace': 'normal',
-        'height': 'auto'
-    },
-        style_cell={'textAlign': 'left'},
-        style_header={
-        'backgroundColor': 'rgb(230, 230, 230)',
-        'fontWeight': 'bold'
-    },
-            )
+    rows = []
+    for i in range(len(dff)):
+        row = []
+        for col in ['Document id_', 'Output']:
+            value = dff.iloc[i][col]
+            if col == 'Document id_':
+                cell = html.Td(html.A(href='https://www.google.com/', children = value))
+            else:
+                cell = html.Td(children = value)
+            row.append(cell)
+        rows.append(html.Tr(row))
+    return html.Table(
+        # Header
+        [html.Tr([html.Th(col) for col in ['Document ID', 'Search Output']]) ] +
+        # Body
+        rows
+    )
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
