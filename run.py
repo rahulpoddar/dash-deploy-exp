@@ -75,3 +75,10 @@ def update_search_results(value):
     dff = df[df['Kaggle Task name'] == value]
     return generate_table(dff)
 
+@app.callback(
+    dash.dependencies.Output('sub-task-questions', 'children'),
+    [dash.dependencies.Input('task-dropdown', 'value')])
+def sub_task_questions(value):
+    dff = df[df['Kaggle Task name'] == value]
+    results = dff['Search'].unique().tolist()
+    return html.P(results)
