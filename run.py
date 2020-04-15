@@ -7,7 +7,7 @@ from dash.dependencies import Input, Output, State
 from flask import Flask
 import os
 import requests
-#from text_summ import _output
+from text_summ import _output
 
 server = Flask(__name__)
 server.secret_key = os.environ.get('secret_key', 'secret')
