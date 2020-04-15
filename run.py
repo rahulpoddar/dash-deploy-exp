@@ -245,6 +245,3 @@ def generate_search_summary(n_clicks, value):
         predictions = response.json()['predictions']
         pred_df = pd.DataFrame(predictions[0])
         return _output(pred_df['text'].tolist())[0]
-
-if __name__ == '__main__':
-    app.run_server(debug=True)
