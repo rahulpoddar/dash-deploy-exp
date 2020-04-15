@@ -51,7 +51,10 @@ app.layout = html.Div([
         ],
         placeholder="Select a task",
     )]),
-    
+    html.Div([
+            html.H3('Sub-Task Questions'),
+            html.Div(id = 'sub-task-questions')
+            ]),
     html.Div([html.H3('Response Summary', id = 'task-summary-heading'),
     html.Div(id = 'task-summary')]),
     
