@@ -71,3 +71,38 @@ app.layout = html.Div([
             ])
 ])
 
+@app.callback(
+    dash.dependencies.Output('task-summary', 'children'),
+    [dash.dependencies.Input('task-dropdown', 'value')])
+def update_summary(value):
+    return generate_summary(value)
+
+
+@app.callback(
+    dash.dependencies.Output('search-results', 'children'),
+    [dash.dependencies.Input('task-dropdown', 'value')])
+def update_search_results(value):
+    dff = df[df['Kaggle Task name'] == value]
+    return generate_table(dff)
+
+
+@app.callback(
+    dash.dependencies.Output('sub-task-questions', 'children'),
+    [dash.dependencies.Input('task-dropdown', 'value')])
+def sub_task_questions(value):
+    dff = df[df['Kaggle Task name'] == value]
+    results = dff['Search'].unique().tolist()
+    return html.P(results)
+   
+@app.callback(
+        Output('query-results', 'children'),
+         [Input('submit-button-state', 'n_clicks')],
+         [State('general-search', 'value')]
+         )
+def populate_search_results(n_clicks, value):
+    query = value
+    response = requests.post("https://nlp.biano-ai.com/develop/test", json={"texts": [query]})
+    predictions = response.json()['predictions']
+    pred_df = pd.DataFrame(predictions[0])
+    pred_df.columns = ['Distance', 'Document id_', 'Output']
+    return generate_table(pred_df)
