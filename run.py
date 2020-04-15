@@ -35,7 +35,7 @@ def generate_table(dff):
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-
+'''
 app.layout = html.Div([
         html.Div([
         html.H1('COVID-19 Open Research Dataset Challenge (CORD-19)'),
@@ -66,7 +66,7 @@ app.layout = html.Div([
             ])
 ])
 
-'''
+
 @app.callback(
     dash.dependencies.Output('task-summary', 'children'),
     [dash.dependencies.Input('task-dropdown', 'value')])
