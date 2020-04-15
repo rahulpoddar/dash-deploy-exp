@@ -1,10 +1,10 @@
-import dash
+'''import dash
 import dash_html_components as html
 import dash_core_components as dcc
 import pandas as pd
 from dash.dependencies import Input, Output, State
 #import requests
-'''
+
 #url = 'https://raw.githubusercontent.com/rahulpoddar/dash-deploy-exp/master/TASK1_annotated_1.csv'
 df = pd.read_csv('https://raw.githubusercontent.com/rahulpoddar/dash-deploy-exp/master/TASK1_annotated_1.csv', encoding='latin1')
 
