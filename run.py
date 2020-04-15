@@ -66,7 +66,7 @@ app.layout = html.Div([
             ])
 ])
 
-
+'''
 @app.callback(
     dash.dependencies.Output('task-summary', 'children'),
     [dash.dependencies.Input('task-dropdown', 'value')])
@@ -89,7 +89,7 @@ def sub_task_questions(value):
     dff = df[df['Kaggle Task name'] == value]
     results = dff['Search'].unique().tolist()
     return html.P(results)
-'''   
+   
 @app.callback(
         Output('query-results', 'children'),
          [Input('submit-button-state', 'n_clicks')],
@@ -103,6 +103,3 @@ def populate_search_results(n_clicks, value):
     pred_df.columns = ['Distance', 'Document id_', 'Output']
     return generate_table(pred_df)
 '''
-
-if __name__ == '__main__':
-    app.run_server(debug=True)
