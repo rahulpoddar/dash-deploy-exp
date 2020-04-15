@@ -72,7 +72,7 @@ app.layout = html.Div([
             html.Div(id = 'query-results')
             ], id = 'search-results-main')
 ])
-'''
+
 @app.callback(
     dash.dependencies.Output('task-summary', 'children'),
     [dash.dependencies.Input('task-dropdown', 'value')])
@@ -80,7 +80,7 @@ def update_summary(value):
     if value != None:
         dff = df[df['Kaggle Task name'] == value]
         return _output(dff['Output'].tolist())[0]    
-'''
+
 
 @app.callback(
     dash.dependencies.Output('search-results', 'children'),
@@ -113,7 +113,7 @@ def populate_search_results(n_clicks, value):
         pred_df = pd.DataFrame(predictions[0])
         pred_df.columns = ['Distance', 'Document id_', 'Output']
         return generate_table(pred_df)
-'''    
+   
 @app.callback(
         Output('search-summary', 'children'),
          [Input('submit-button-state', 'n_clicks')],
@@ -126,6 +126,6 @@ def generate_search_summary(n_clicks, value):
         predictions = response.json()['predictions']
         pred_df = pd.DataFrame(predictions[0])
         return _output(pred_df['text'].tolist())[0]
-'''
+
 if __name__ == '__main__':
     app.run_server(debug=True)
