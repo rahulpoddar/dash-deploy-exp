@@ -218,7 +218,7 @@ app.layout = html.Div([
             ], id = 'search-results-main', style = {'margin-left': '10%','margin-right': '10%'}),
     html.Hr(),
 ])
-'''
+
 @app.callback(
     Output('sub-task-dropdown', 'options'),
     [Input('task-dropdown', 'value')])
@@ -293,3 +293,4 @@ def generate_search_summary(n_clicks, value):
 '''
 if __name__ == '__main__':
     app.run_server(debug=True)
+'''
