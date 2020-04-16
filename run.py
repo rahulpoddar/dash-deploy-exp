@@ -22,7 +22,7 @@ app = dash.Dash(name = __name__, server = server, external_stylesheets = externa
 
 #app.config['suppress_callback_exceptions'] = True
 
-df = pd.read_csv('https://raw.githubusercontent.com/rahulpoddar/dash-deploy-exp/master/TASK1_annotated_1_v3.csv', encoding='latin1')
+df = pd.read_csv('https://raw.githubusercontent.com/rahulpoddar/dash-deploy-exp/master/TASK1_annotated_1_v4.csv', encoding='latin1')
 
 tasks = df['Task Name'].unique().tolist()
 
