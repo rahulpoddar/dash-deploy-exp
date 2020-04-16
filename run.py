@@ -11,6 +11,7 @@ from nltk.stem import PorterStemmer
 import re
 import string
 from nltk.tokenize import word_tokenize, sent_tokenize
+import dash_bootstrap_components as dbc
 
 server = Flask(__name__)
 server.secret_key = os.environ.get('secret_key', 'secret')
