@@ -240,7 +240,7 @@ def populate_search_results(n_clicks, value):
         response = requests.post("https://nlp.biano-ai.com/develop/test", json={"texts": [query]})
         predictions = response.json()['predictions']
         pred_df = pd.DataFrame(predictions[0])
-        pred_df.columns = ['Distance', 'Title', 'Output', 'URL']
+        pred_df.columns = ['Distance', 'Document ID', 'Output', 'Title', 'URL']
         return generate_table(pred_df)
     
 @app.callback(
