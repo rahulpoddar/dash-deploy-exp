@@ -15,9 +15,9 @@ from nltk.tokenize import word_tokenize, sent_tokenize
 server = Flask(__name__)
 server.secret_key = os.environ.get('secret_key', 'secret')
 app = dash.Dash(name = __name__, server = server)
-#app.config.supress_callback_exceptions = True
+#app.config['suppress_callback_exceptions'] = True
 
-df = pd.read_csv('https://raw.githubusercontent.com/rahulpoddar/dash-deploy-exp/master/TASK1_annotated_1_v2.csv', encoding='latin1')
+df = pd.read_csv('https://raw.githubusercontent.com/rahulpoddar/dash-deploy-exp/master/TASK1_annotated_1_v3.csv', encoding='latin1')
 
 tasks = df['Task Name'].unique().tolist()
 
@@ -82,7 +82,7 @@ def _calculate_sentence_scores(sentences, frequency_table) -> dict:
                 else:
                     sentence_weight[sentence[:7]] = frequency_table[word_weight]
 
-        sentence_weight[sentence[:7]] = sentence_weight[sentence[:7]] /        sentence_wordcount_without_stop_words
+        sentence_weight[sentence[:7]] = sentence_weight[sentence[:7]] /(sentence_wordcount_without_stop_words)
       
     return sentence_weight
 
@@ -94,7 +94,7 @@ def _calculate_average_score(sentence_weight) -> int:
         sum_values += sentence_weight[entry]
 
     # Getting sentence average value from source text
-    average_score = (sum_values / len(sentence_weight))
+    average_score = (sum_values / (len(sentence_weight)))
 
     return average_score
 
@@ -171,7 +171,6 @@ app.layout = html.Div([
         dcc.Input(id = 'general-search', type = 'text', placeholder = 'Type a query', value = ''),
         html.Button(id='submit-button-state', n_clicks=0, children='Submit'),
         ]),
-        html.Hr(),
         html.H3('OR'),
         html.Div([
         html.H3('Select a task:'),
@@ -182,53 +181,73 @@ app.layout = html.Div([
         ],
         placeholder="Select a task",
     ),
+        html.Div([
+                html.H3('Select a sub-task:'),
+                dcc.Dropdown(
+                        id='sub-task-dropdown',
+                        placeholder = "Select a sub-task",
+                        ),
+                
+                html.Hr(),
+                html.Div([
+                        html.H3('Response Summary'),
+                        html.Div(id = 'task-summary'),
+                        html.Div(id = 'query-summary')
+                        ])
+                ], id = 'sub-task'),
                 ]),
     ]),
-    html.Div([
-            html.H3('Sub-Task Questions'),
-            html.Div(id = 'sub-task-questions')
-            ], id = 'sub-task-questions-main'),
-    html.Hr(),
-    html.Div([html.H3('Response Summary'),
-    html.Div(id = 'task-summary'),
-    html.Div(id = 'search-summary')], id = 'task-summary-main'),
-    html.Hr(),
     
+    html.Hr(),
     html.Div([
             html.H3('Search Results'),
-            html.Div(id = 'search-results'),
+            html.Div(id = 'task-results'),
             html.Div(id = 'query-results')
             ], id = 'search-results-main'),
     html.Hr(),
 ])
 
 @app.callback(
-    dash.dependencies.Output('task-summary', 'children'),
-    [dash.dependencies.Input('task-dropdown', 'value')])
-def update_summary(value):
-    if value != None:
-        dff = df[df['Task Name'] == value]
-        return _output(dff['Output'].tolist())[0]    
+    Output('sub-task-dropdown', 'options'),
+    [Input('task-dropdown', 'value')])
+def set_subtask_options(selected_task):
+    if selected_task != None:
+        dff = df[df['Task Name'] == selected_task]
+        options = dff['Sub-tasks'].unique().tolist()
+        return [{'label': i, 'value': i} for i in options]
+    else:
+        return [{'label': i, 'value': i} for i in []]
+    
+@app.callback(
+    Output('sub-task-dropdown', 'value'),
+    [Input('sub-task-dropdown', 'options')])
+def set_subtask_value(available_options):
+    if available_options != []:
+        return available_options[0]['value']
+    else:
+        return ''
+    
+@app.callback(
+    Output('task-summary', 'children'),
+    [Input('sub-task-dropdown', 'value')])
+def update_taks_summary(value):
+    if value != '':
+        dff = df[df['Sub-tasks'] == value]
+        return _output(dff['Output'].tolist())[0]
+    else:
+        return ''
 
 
 @app.callback(
-    dash.dependencies.Output('search-results', 'children'),
-    [dash.dependencies.Input('task-dropdown', 'value')])
-def update_search_results(value):
-    if value != None:
-        dff = df[df['Task Name'] == value]
+    Output('task-results', 'children'),
+    [Input('sub-task-dropdown', 'value')])
+def update_taks_results(value):
+    if value != '':
+        dff = df[df['Sub-tasks'] == value]
         return generate_table(dff)
-
-
-@app.callback(
-    dash.dependencies.Output('sub-task-questions', 'children'),
-    [dash.dependencies.Input('task-dropdown', 'value')])
-def sub_task_questions(value):
-    if value != None:
-        dff = df[df['Task Name'] == value]
-        results = dff['Sub-tasks'].unique().tolist()
-        return html.P(results)
-   
+    else:
+        return ''
+    
 @app.callback(
         Output('query-results', 'children'),
          [Input('submit-button-state', 'n_clicks')],
@@ -242,9 +261,11 @@ def populate_search_results(n_clicks, value):
         pred_df = pd.DataFrame(predictions[0])
         pred_df.columns = ['Distance', 'Document ID', 'Output', 'Title', 'URL']
         return generate_table(pred_df)
-    
+    else:
+        return ''
+
 @app.callback(
-        Output('search-summary', 'children'),
+        Output('query-summary', 'children'),
          [Input('submit-button-state', 'n_clicks')],
          [State('general-search', 'value')]
          )
@@ -255,6 +276,8 @@ def generate_search_summary(n_clicks, value):
         predictions = response.json()['predictions']
         pred_df = pd.DataFrame(predictions[0])
         return _output(pred_df['text'].tolist())[0]
+    else:
+        return ''
 
 if __name__ == '__main__':
     app.run_server(debug=True)
