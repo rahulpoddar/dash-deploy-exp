@@ -21,7 +21,7 @@ app = dash.Dash(name = __name__, server = server, external_stylesheets = externa
 #external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 #app.config['suppress_callback_exceptions'] = True
-'''
+
 df = pd.read_csv('https://raw.githubusercontent.com/rahulpoddar/dash-deploy-exp/master/TASK1_annotated_1_v3.csv', encoding='latin1')
 
 tasks = df['Task Name'].unique().tolist()
@@ -218,7 +218,7 @@ app.layout = html.Div([
             ], id = 'search-results-main', style = {'margin-left': '10%','margin-right': '10%'}),
     html.Hr(),
 ])
-
+'''
 @app.callback(
     Output('sub-task-dropdown', 'options'),
     [Input('task-dropdown', 'value')])
