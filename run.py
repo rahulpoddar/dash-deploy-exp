@@ -17,9 +17,9 @@ server.secret_key = os.environ.get('secret_key', 'secret')
 app = dash.Dash(name = __name__, server = server)
 #app.config.supress_callback_exceptions = True
 
-df = pd.read_csv('https://raw.githubusercontent.com/rahulpoddar/dash-deploy-exp/master/TASK1_annotated_1.csv', encoding='latin1')
+df = pd.read_csv('https://raw.githubusercontent.com/rahulpoddar/dash-deploy-exp/master/TASK1_annotated_1_v2.csv', encoding='latin1')
 
-tasks = df['Kaggle Task name'].unique().tolist()
+tasks = df['Task Name'].unique().tolist()
 
 def data_prep(inpt): 
     clean_data = []
@@ -144,9 +144,9 @@ def generate_table(dff):
     rows = []
     for i in range(len(dff)):
         row = []
-        for col in ['Document id_', 'Output']:
+        for col in ['Title', 'Output']:
             value = dff.iloc[i][col]
-            if col == 'Document id_':
+            if col == 'Title':
                 cell = html.Td(html.A(href='https://www.google.com/', children = value))
             else:
                 cell = html.Td(children = value)
@@ -154,7 +154,7 @@ def generate_table(dff):
         rows.append(html.Tr(row))
     return html.Table(
         # Header
-        [html.Tr([html.Th(col) for col in ['Document ID', 'Search Output']]) ] +
+        [html.Tr([html.Th(col) for col in ['Title', 'Search Output']]) ] +
         # Body
         rows
     )
@@ -197,7 +197,7 @@ app.layout = html.Div([
     [dash.dependencies.Input('task-dropdown', 'value')])
 def update_summary(value):
     if value != None:
-        dff = df[df['Kaggle Task name'] == value]
+        dff = df[df['Task Name'] == value]
         return _output(dff['Output'].tolist())[0]    
 
 
@@ -206,7 +206,7 @@ def update_summary(value):
     [dash.dependencies.Input('task-dropdown', 'value')])
 def update_search_results(value):
     if value != None:
-        dff = df[df['Kaggle Task name'] == value]
+        dff = df[df['Task Name'] == value]
         return generate_table(dff)
 
 
@@ -215,8 +215,8 @@ def update_search_results(value):
     [dash.dependencies.Input('task-dropdown', 'value')])
 def sub_task_questions(value):
     if value != None:
-        dff = df[df['Kaggle Task name'] == value]
-        results = dff['Search'].unique().tolist()
+        dff = df[df['Task Name'] == value]
+        results = dff['Sub-tasks'].unique().tolist()
         return html.P(results)
    
 @app.callback(
@@ -230,7 +230,7 @@ def populate_search_results(n_clicks, value):
         response = requests.post("https://nlp.biano-ai.com/develop/test", json={"texts": [query]})
         predictions = response.json()['predictions']
         pred_df = pd.DataFrame(predictions[0])
-        pred_df.columns = ['Distance', 'Document id_', 'Output']
+        pred_df.columns = ['Distance', 'Title', 'Output', 'URL']
         return generate_table(pred_df)
     
 @app.callback(
@@ -245,3 +245,6 @@ def generate_search_summary(n_clicks, value):
         predictions = response.json()['predictions']
         pred_df = pd.DataFrame(predictions[0])
         return _output(pred_df['text'].tolist())[0]
+
+if __name__ == '__main__':
+    app.run_server(debug=True)
