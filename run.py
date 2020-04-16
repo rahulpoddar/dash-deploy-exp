@@ -21,7 +21,7 @@ app = dash.Dash(name = __name__, server = server, external_stylesheets = externa
 #external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 #app.config['suppress_callback_exceptions'] = True
-
+'''
 df = pd.read_csv('https://raw.githubusercontent.com/rahulpoddar/dash-deploy-exp/master/TASK1_annotated_1_v3.csv', encoding='latin1')
 
 tasks = df['Task Name'].unique().tolist()
@@ -290,6 +290,6 @@ def generate_search_summary(n_clicks, value):
         return _output(pred_df['text'].tolist())[0]
     else:
         return ''
-
+'''
 if __name__ == '__main__':
     app.run_server(debug=True)
