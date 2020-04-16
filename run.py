@@ -146,8 +146,9 @@ def generate_table(dff):
         row = []
         for col in ['Title', 'Output']:
             value = dff.iloc[i][col]
+            url = dff.iloc[i]['URL']
             if col == 'Title':
-                cell = html.Td(html.A(href='https://www.google.com/', children = value))
+                cell = html.Td(html.A(href=url, children = value))
             else:
                 cell = html.Td(children = value)
             row.append(cell)
@@ -164,7 +165,16 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app.layout = html.Div([
         html.Div([
         html.H1('COVID-19 Open Research Dataset Challenge (CORD-19)'),
-        html.H3('Search a task:'),
+        html.Hr(),
+        html.Div([
+        html.H3('Type a general query:'),
+        dcc.Input(id = 'general-search', type = 'text', placeholder = 'Type a query', value = ''),
+        html.Button(id='submit-button-state', n_clicks=0, children='Submit'),
+        ]),
+        html.Hr(),
+        html.H3('OR'),
+        html.Div([
+        html.H3('Select a task:'),
         dcc.Dropdown(
         id='task-dropdown',
         options=[
@@ -172,24 +182,24 @@ app.layout = html.Div([
         ],
         placeholder="Select a task",
     ),
-    html.H3('Or type a general query:'),
-    dcc.Input(id = 'general-search', type = 'text', placeholder = 'Type a query', value = ''),
-    html.Button(id='submit-button-state', n_clicks=0, children='Submit'),
+                ]),
     ]),
-    
     html.Div([
             html.H3('Sub-Task Questions'),
             html.Div(id = 'sub-task-questions')
             ], id = 'sub-task-questions-main'),
+    html.Hr(),
     html.Div([html.H3('Response Summary'),
     html.Div(id = 'task-summary'),
     html.Div(id = 'search-summary')], id = 'task-summary-main'),
+    html.Hr(),
     
     html.Div([
             html.H3('Search Results'),
             html.Div(id = 'search-results'),
             html.Div(id = 'query-results')
-            ], id = 'search-results-main')
+            ], id = 'search-results-main'),
+    html.Hr(),
 ])
 
 @app.callback(
