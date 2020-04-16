@@ -13,9 +13,13 @@ import string
 from nltk.tokenize import word_tokenize, sent_tokenize
 import dash_bootstrap_components as dbc
 
+external_stylesheets=[dbc.themes.BOOTSTRAP]
+
 server = Flask(__name__)
 server.secret_key = os.environ.get('secret_key', 'secret')
-app = dash.Dash(name = __name__, server = server)
+app = dash.Dash(name = __name__, server = server, external_stylesheets = external_stylesheets)
+#external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+
 #app.config['suppress_callback_exceptions'] = True
 
 df = pd.read_csv('https://raw.githubusercontent.com/rahulpoddar/dash-deploy-exp/master/TASK1_annotated_1_v3.csv', encoding='latin1')
@@ -154,25 +158,33 @@ def generate_table(dff):
                 cell = html.Td(children = value)
             row.append(cell)
         rows.append(html.Tr(row))
-    return html.Table(
+    return dbc.Table(
         # Header
-        [html.Tr([html.Th(col) for col in ['Title', 'Search Output']]) ] +
+        [html.Tr([html.Th(col,  style={'text-align':'center'}) for col in ['Title', 'Search Output']]) ] +
         # Body
-        rows
+        rows,
+        bordered=True,
+        dark=False,
+        hover=True,
+        responsive=True,
+        striped=True,
     )
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app.layout = html.Div([
         html.Div([
-        html.H1('COVID-19 Open Research Dataset Challenge (CORD-19)'),
+        html.H1('COVID-19 Open Research Dataset Challenge (CORD-19)', style = {'margin-left': '10%', 'margin-top': '5%'}),
         html.Hr(),
         html.Div([
-        html.H3('Type a general query:'),
-        dcc.Input(id = 'general-search', type = 'text', placeholder = 'Type a query', value = ''),
-        html.Button(id='submit-button-state', n_clicks=0, children='Submit'),
-        ]),
-        html.H3('OR'),
+        html.H3('Type a general query (e.g. "What is Corona Virus?"):'),
+        html.Br(),
+        dbc.Input(id = 'general-search', type = 'text', placeholder = 'Type a query', value = ''),
+        html.Br(),
+        dbc.Button(id='submit-button-state', n_clicks=0, children='Submit', color = "primary", className="mr-2", style = {'margin-left': '46%'}),
+        ], style = {'width': '80%', 'margin': 'auto'}),
+        html.Hr(),
+        html.Div([html.H3('OR')],style = {'margin-left': '48%'}),
+        html.Hr(),
         html.Div([
         html.H3('Select a task:'),
         dcc.Dropdown(
@@ -182,29 +194,28 @@ app.layout = html.Div([
         ],
         placeholder="Select a task",
     ),
+        html.Br(),
         html.Div([
                 html.H3('Select a sub-task:'),
                 dcc.Dropdown(
                         id='sub-task-dropdown',
                         placeholder = "Select a sub-task",
                         ),
-                
-                html.Hr(),
-                html.Div([
-                        html.H3('Response Summary'),
-                        html.Div(id = 'task-summary'),
-                        html.Div(id = 'query-summary')
-                        ])
                 ], id = 'sub-task'),
-                ]),
+                ], style = {'margin-left': '10%','margin-right': '10%'}),
     ]),
-    
+    html.Hr(),
+    html.Div([
+                html.H3('Response Summary'),
+                html.Div(id = 'task-summary'),
+                html.Div(id = 'query-summary')
+                        ], style = {'margin-left': '10%','margin-right': '10%'}),
     html.Hr(),
     html.Div([
             html.H3('Search Results'),
             html.Div(id = 'task-results'),
             html.Div(id = 'query-results')
-            ], id = 'search-results-main'),
+            ], id = 'search-results-main', style = {'margin-left': '10%','margin-right': '10%'}),
     html.Hr(),
 ])
 
